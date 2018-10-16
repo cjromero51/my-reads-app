@@ -4,9 +4,6 @@ import BookShelf from './BookShelf'
 import { Link, Route } from 'react-router-dom'
 import Search from './Search'
 class BookCase extends React.Component {
-  state = {
-
-  }
 
   updateBookShelves = () => {
     const newCurrentlyReading = {
