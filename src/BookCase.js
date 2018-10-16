@@ -5,7 +5,26 @@ class BookCase extends React.Component {
   state = {
 
   }
+
+  updateBookShelves = () => {
+    const newCurrentlyReading = {
+      name: 'Currently Reading',
+      books: this.props.books.filter(book => book.shelf === 'currentlyReading')
+    };
+    const newWantToRead = {
+      name: 'Want to Read',
+      books: this.props.books.filter(book => book.shelf === 'wantToRead')
+    };
+    const newRead = {
+      name: 'Read',
+      books: this.props.books.filter(book => book.shelf === 'read')
+    };
+    return ([newCurrentlyReading, newWantToRead, newRead])
+  }
   render(){
+    let shelves = [];
+    if (this.props.books)
+      shelves = this.updateBookShelves()
     return (
       <div className="app">
         <div className="list-books">
@@ -15,7 +34,13 @@ class BookCase extends React.Component {
           <div className="list-books-content">
             <div>
               <div className="bookshelf">
-                <BookShelf/>
+                {shelves.map(shelf => (
+                  <BookShelf
+                  key={shelf.name}
+                  shelf={shelf}
+                    />
+                ))
+              }
               </div>
             </div>
             <div className="open-search">
@@ -23,6 +48,7 @@ class BookCase extends React.Component {
             </div>
           </div>
         </div>
+      </div>
     )
   }
 }

@@ -1,23 +1,25 @@
 import React from 'react'
-
+// import * as BooksAPI from './BooksAPI'
+import ShelfSwitcher from './ShelfSwitcher'
 class Book extends React.Component {
   render(){
+    const author = (this.props.book && this.props.book.authors)
+    const title = (this.props.book && this.props.book.title)
+    const imageURL = (this.props.book.imageLinks && `url("${this.props.book.imageLinks.smallThumbnail}")`)
     return (
-      <li>
         <div className="book">
           <div className="book-top">
             <div className="book-cover" style={{
               width: 128,
               height: 192,
-              backgroundImage: 'url("http://books.google.com/books/content?id=32haAAAAMAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72yckZ5f5bDFVIf7BGPbjA0KYYtlQ__nWB-hI_YZmZ-fScYwFy4O_fWOcPwf-pgv3pPQNJP_sT5J_xOUciD8WaKmevh1rUR-1jk7g1aCD_KeJaOpjVu0cm_11BBIUXdxbFkVMdi&source=gbs_api")' }}
-              >
+              backgroundImage: imageURL
+            }}>
             </div>
             <ShelfSwitcher/>
           </div>
-          <div className="book-title">Tom Sawyer</div>
-          <div className="book-authors">LoL idk</div>
+          <div className="book-title">{title}</div>
+          <div className="book-authors">{author}</div>
         </div>
-      </li>
     )
   }
 }

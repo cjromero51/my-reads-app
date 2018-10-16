@@ -1,6 +1,7 @@
 import React from 'react'
 import './App.css'
-import BookCases from './Bookcase'
+import BookCase from './BookCase'
+import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends React.Component {
   state = {
@@ -12,10 +13,23 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false
   }
-
+  componentDidMount = () => {
+    this.reloadAllBooks()
+    // if (this.state.newBook) {
+    // }
+  }
+  reloadAllBooks = () => {
+    BooksAPI.getAll().then(allBooks => {
+      this.setState({
+        books: allBooks,
+        newBook: false
+      })
+      console.log(this.state.books)
+    })
+  }
   render() {
     return (
-      <BookCase/>
+      <BookCase books={this.state.books} reloadAllBooks={this.reloadAllBooks}/>
     )
   }
 }
