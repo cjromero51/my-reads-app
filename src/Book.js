@@ -16,7 +16,6 @@ class Book extends React.Component {
             }}>
             </div>
             <ShelfSwitcher
-              shelf={this.props.shelf}
               book={this.props.book}
               switchBookShelf={ this.props.switchBookShelf }
             />

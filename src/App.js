@@ -2,7 +2,8 @@ import React from 'react'
 import './App.css'
 import BookCase from './BookCase'
 import * as BooksAPI from './BooksAPI'
-
+import { Route } from 'react-router-dom'
+import Search from './Search'
 class BooksApp extends React.Component {
   state = {
     showSearchPage: false
@@ -35,10 +36,20 @@ class BooksApp extends React.Component {
   }
   render() {
     return (
-      <BookCase
-        switchBookShelf={ this.switchShelf }
-        books={ this.state.books }
-        reloadAllBooks={ this.reloadAllBooks }/>
+      <div>
+      <Route exact path="/" render={() => (
+        <BookCase
+          switchBookShelf={ this.switchShelf }
+          books={ this.state.books }
+          reloadAllBooks={ this.reloadAllBooks }/>
+      )}
+      />
+      <Route path="/search" render={() => (
+        <Search
+          allBooks={this.state.allBooks}
+          />
+      )}/>
+      </div>
     )
   }
 }
