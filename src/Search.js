@@ -6,31 +6,37 @@ import * as BooksAPI from './BooksAPI'
 // import Book from './book'
 class Search extends React.Component {
   state = {
-    query: ''
+    query: '',
+    books: []
   }
   updateQuery = (query) => {
     this.setState({ query })
+    this.updateSearch();
   }
   updateSearch = () => {
     if (this.state.query === '') {
       this.setState({ books: [] })
     }
+    if (this.state.query.length > 0) {
     BooksAPI.search(this.state.query).then( res => {
       console.log(res)
-      this.setState({books:res})
-    })
-  }
-  render(){
-    let showingBooks
-    if (this.state.query !== '') {
+
+      let shownBooks
+      let showingBooks
+      shownBooks = this.props.allBooks.concat(res)
       const matchingText = new RegExp(escapeRegExp(this.state.query), 'i')
-      showingBooks = this.props.allBooks.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
-    } else {
-      showingBooks = this.props.allBooks
-    }
-    if (this.state.query !== '') {
+      showingBooks = shownBooks.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
       showingBooks.sort(sortBy('title'))
-    }
+      this.setState({books: showingBooks})
+    })}
+  }
+  // componentWillReceiveProps = (props) => {
+  //   this.props = props;
+  //   let shownBooks = this.props.allBooks.concat(this.state.books)
+  //   this.setState({books: shownBooks})
+  // }
+  render(){
+
 
     return(
       <div className="search-books">
@@ -47,8 +53,8 @@ class Search extends React.Component {
             </div>
         <div className="search-books-results">
         <ol className="books-grid">
-        {this.state.query !== '' && (
-          showingBooks.map(book => (
+        {this.state.books && (
+          this.state.books.map(book => (
           <li key={book.id}>{book.title}</li>
         )))}
         </ol>
