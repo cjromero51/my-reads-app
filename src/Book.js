@@ -15,7 +15,11 @@ class Book extends React.Component {
               backgroundImage: imageURL
             }}>
             </div>
-            <ShelfSwitcher/>
+            <ShelfSwitcher
+              shelf={this.props.shelf}
+              book={this.props.book}
+              switchBookShelf={ this.props.switchBookShelf }
+            />
           </div>
           <div className="book-title">{title}</div>
           <div className="book-authors">{author}</div>

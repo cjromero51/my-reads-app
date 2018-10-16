@@ -38,6 +38,7 @@ class BookCase extends React.Component {
                   <BookShelf
                   key={shelf.name}
                   shelf={shelf}
+                  switchBookShelf={ this.props.switchBookShelf }
                     />
                 ))
               }
