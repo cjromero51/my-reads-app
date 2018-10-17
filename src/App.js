@@ -7,7 +7,7 @@ import Search from './Search'
 
 class BooksApp extends React.Component {
   state = {
-    showSearchPage: false
+    books:[]
   }
   componentDidMount = () => {
     this.reloadAllBooks()

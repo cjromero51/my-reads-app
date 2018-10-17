@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
-// import Book from './book'
+import Book from './Book'
 class Search extends React.Component {
   state = {
     query: '',
@@ -13,21 +13,29 @@ class Search extends React.Component {
     this.setState({ query })
     this.updateSearch();
   }
+  filteringDuplicates = (arr) => {
+    let filteredBooks = []
+    for (var i = 0; i < arr.length; i++) {
+      if (filteredBooks.indexOf(arr[i]) === -1) {
+        filteredBooks.push(arr[i])
+      }
+    }
+    return filteredBooks
+  }
   updateSearch = () => {
     if (this.state.query === '') {
       this.setState({ books: [] })
     }
-    if (this.state.query.length > 0) {
+    if (this.state.query.length) {
     BooksAPI.search(this.state.query).then( res => {
-      console.log(res)
-
-      let shownBooks
-      let showingBooks
-      shownBooks = this.props.allBooks.concat(res)
+      let shownBooks = this.props.allBooks.concat(res)
+      let showingBooks = this.filteringDuplicates(shownBooks);
       const matchingText = new RegExp(escapeRegExp(this.state.query), 'i')
-      showingBooks = shownBooks.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
-      showingBooks.sort(sortBy('title'))
-      this.setState({books: showingBooks})
+
+      let finalFilter = showingBooks.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
+      finalFilter.sort(sortBy('title'))
+
+      this.setState({books: finalFilter})
     })}
   }
   // componentWillReceiveProps = (props) => {
@@ -55,7 +63,12 @@ class Search extends React.Component {
         <ol className="books-grid">
         {this.state.books && (
           this.state.books.map(book => (
-          <li key={book.id}>{book.title}</li>
+            <li key={book.id}>
+          <Book
+            book={book}
+            switchBookShelf={ this.props.switchBookShelf }
+          />
+          </li>
         )))}
         </ol>
       </div>
