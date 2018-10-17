@@ -1,5 +1,4 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
 
 class ShelfSwitcher extends React.Component {
   state = {

@@ -11,8 +11,6 @@ class BooksApp extends React.Component {
   }
   componentDidMount = () => {
     this.reloadAllBooks()
-    // if (this.state.newBook) {
-    // }
   }
   reloadAllBooks = () => {
     BooksAPI.getAll().then(allBooks => {

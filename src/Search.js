@@ -4,13 +4,15 @@ import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
+
 class Search extends React.Component {
   state = {
     query: '',
-    books: []
+    books: [],
+    showSearchPage: true
   }
   updateQuery = (query) => {
-    this.setState({ query })
+    this.setState({ query });
     this.updateSearch();
   }
   filteringDuplicates = (arr) => {
@@ -25,18 +27,18 @@ class Search extends React.Component {
   updateSearch = () => {
     if (this.state.query === '') {
       this.setState({ books: [] })
+    } else {
+      BooksAPI.search(this.state.query).then( res => {
+        let shownBooks = this.props.allBooks.concat(res)
+        let noDuplicates = this.filteringDuplicates(shownBooks);
+        const matchingText = new RegExp(escapeRegExp(this.state.query), 'i')
+
+        let finalFilter = noDuplicates.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
+        return finalFilter.sort(sortBy('title'))
+      }).then(res => {
+        this.setState({books: res})
+      })
     }
-    if (this.state.query.length) {
-    BooksAPI.search(this.state.query).then( res => {
-      let shownBooks = this.props.allBooks.concat(res)
-      let showingBooks = this.filteringDuplicates(shownBooks);
-      const matchingText = new RegExp(escapeRegExp(this.state.query), 'i')
-
-      let finalFilter = showingBooks.filter(book => matchingText.test(book.title) || matchingText.test(book.authors))
-      finalFilter.sort(sortBy('title'))
-
-      this.setState({books: finalFilter})
-    })}
   }
   // componentWillReceiveProps = (props) => {
   //   this.props = props;
@@ -54,8 +56,8 @@ class Search extends React.Component {
               <input
                 type="text"
                 placeholder="Search by title or author"
-                value={this.state.query}
-                onChange={(event) => this.updateQuery(event.target.value)}
+                onChange={(event) => (this.updateQuery(event.target.value))}
+                value={this.state.query.value}
                 />
               </div>
             </div>
@@ -66,7 +68,7 @@ class Search extends React.Component {
             <li key={book.id}>
           <Book
             book={book}
-            switchBookShelf={ this.props.switchBookShelf }
+            switchBookShelf={this.props.switchBookShelf}
           />
           </li>
         )))}

@@ -1,6 +1,6 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
 import ShelfSwitcher from './ShelfSwitcher'
+
 class Book extends React.Component {
   render(){
     const author = (this.props.book && this.props.book.authors)
