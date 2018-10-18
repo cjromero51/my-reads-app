@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-// import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
@@ -24,12 +23,12 @@ class Search extends React.Component {
     } if (this.state.query) {
       console.log("query in updateSearch() is:", this.state.query)
     BooksAPI.search(this.state.query).then( res => {
+      let finalFilter = []
       if (res.length) {
-        let finalFilter = []
         finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res)
         finalFilter.sort(sortBy('title'));
+      }
         this.setState({books: finalFilter})
-        }
       })
     }
   }
@@ -60,7 +59,7 @@ class Search extends React.Component {
                 id='myInput'
                 type="text"
                 placeholder="Search by title or author"
-                onChange={(event) => this.updateQuery(event.target.value)}
+                onKeyUp={(event) => this.updateQuery(event.target.value)}
                 value={this.state.query.value}
                 />
               </div>
