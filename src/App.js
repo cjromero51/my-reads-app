@@ -4,6 +4,7 @@ import BookCase from './BookCase'
 import * as BooksAPI from './BooksAPI'
 import { Route } from 'react-router-dom'
 import Search from './Search'
+import sortBy from 'sort-by'
 
 class BooksApp extends React.Component {
   state = {
@@ -28,6 +29,7 @@ class BooksApp extends React.Component {
         newBooks[0].shelf = shelf;
       } else {
         newBooksArray.push(book)
+        newBooksArray = newBooksArray.sort(sortBy('title'))
       }
       this.setState({books: newBooksArray})
     })

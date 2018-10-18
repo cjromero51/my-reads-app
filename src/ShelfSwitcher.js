@@ -4,6 +4,10 @@ class ShelfSwitcher extends React.Component {
   state = {
     shelf: this.props.book.shelf || 'none'
   }
+  componentWillReceiveProps = (props) => {
+    this.props = props;
+    this.setState({shelf: this.props.book.shelf})
+  }
   render() {
     return (
       <div className="book-shelf-changer">

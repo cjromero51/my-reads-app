@@ -26,25 +26,33 @@ class Search extends React.Component {
       return;
     } if (this.state.query !== '') {
     BooksAPI.search(this.state.query).then( res => {
+      if (res.length) {
         let finalFilter = []
         finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res)
+        finalFilter.sort(sortBy('title'));
         this.setState({books: finalFilter})
-    })}
+        }
+      })
+    }
   }
-  combineBookCaseAndQuery = (currentBooks, query) => {
+  combineBookCaseAndQuery = (currentBooks, terms) => {
     const ht = {};
     currentBooks.forEach(book => ht[book.id] = book.shelf);
 
-    query.forEach(book => {
+    terms.forEach(book => {
       book.shelf = ht[book.id] || 'none';
     })
-    return query.sort(sortBy('title'));
+    return terms;
   }
-  // componentWillReceiveProps = (props) => {
-  //   this.props = props;
-  //   let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
-  //   this.setState({books: finalFilter})
-  // }
+  componentWillReceiveProps = (props) => {
+    this.props = props;
+    if (this.state.query === '') {
+      this.setState({books:[]})
+    }
+    let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
+    finalFilter.sort(sortBy('title'));
+    this.setState({books: finalFilter})
+  }
   render(){
 
 

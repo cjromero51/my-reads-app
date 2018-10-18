@@ -5,7 +5,9 @@ import { Link, Route } from 'react-router-dom'
 import Search from './Search'
 
 class BookCase extends React.Component {
-
+  componentDidMount = () => {
+    this.props.reloadAllBooks();
+  }
   updateBookShelves = () => {
     const newCurrentlyReading = {
       name: 'Currently Reading',
@@ -34,7 +36,7 @@ class BookCase extends React.Component {
           <div className="list-books-content">
             <div>
               <div className="bookshelf">
-                {shelves.map(shelf => (
+                {shelves && shelves.map(shelf => (
                   <BookShelf
                   key={shelf.name}
                   shelf={shelf}
