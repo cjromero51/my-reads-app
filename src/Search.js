@@ -12,14 +12,25 @@ class Search extends React.Component {
   }
 
   updateQuery = (query) => {
-    let inputTest = document.getElementById('myInput')
-    if (inputTest.value.length === 0) {
-      this.setState({query: ''})
-    }
+    // let inputTest = document.getElementById('myInput')
+    // if ( inputTest.value.length === 0 ) {
+    //   this.setState({query: ''})
+    // }
     this.setState({ query });
-    this.updateSearch(this.state.query);
+    this.updateSearch();
   }
 
+  updateSearch = () => {
+    if (this.state.query === '') {
+      this.setState({ books: [] })
+      return;
+    } if (this.state.query !== '') {
+    BooksAPI.search(this.state.query).then( res => {
+        let finalFilter = []
+        finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res)
+        this.setState({books: finalFilter})
+    })}
+  }
   combineBookCaseAndQuery = (currentBooks, query) => {
     const ht = {};
     currentBooks.forEach(book => ht[book.id] = book.shelf);
@@ -29,25 +40,11 @@ class Search extends React.Component {
     })
     return query.sort(sortBy('title'));
   }
-  updateSearch = (query) => {
-    if (query.value === '') {
-      this.setState({ books: [] })
-      return;
-    } if (query.length !== 0) {
-      BooksAPI.search(this.state.query).then( res => {
-        if(res.length) {
-          let finalFilter = []
-          finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res)
-          this.setState({books: finalFilter})
-        }
-      })
-    }
-  }
-  componentWillReceiveProps = (props) => {
-    this.props = props;
-    let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
-    this.setState({books: finalFilter})
-  }
+  // componentWillReceiveProps = (props) => {
+  //   this.props = props;
+  //   let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
+  //   this.setState({books: finalFilter})
+  // }
   render(){
 
 
@@ -60,8 +57,8 @@ class Search extends React.Component {
                 id='myInput'
                 type="text"
                 placeholder="Search by title or author"
+                onChange={(event) => this.updateQuery(event.target.value)}
                 value={this.state.query.value}
-                onChange={(event) => (this.updateQuery(event.target.value))}
                 />
               </div>
             </div>
