@@ -12,19 +12,17 @@ class Search extends React.Component {
   }
 
   updateQuery = (query) => {
-    // let inputTest = document.getElementById('myInput')
-    // if ( inputTest.value.length === 0 ) {
-    //   this.setState({query: ''})
-    // }
-    this.setState({ query });
-    this.updateSearch();
+    this.setState({ query }, () => {
+      this.updateSearch();
+    });
   }
 
   updateSearch = () => {
     if (this.state.query === '') {
       this.setState({ books: [] })
       return;
-    } if (this.state.query !== '') {
+    } if (this.state.query) {
+      console.log("query in updateSearch() is:", this.state.query)
     BooksAPI.search(this.state.query).then( res => {
       if (res.length) {
         let finalFilter = []
@@ -46,9 +44,6 @@ class Search extends React.Component {
   }
   componentWillReceiveProps = (props) => {
     this.props = props;
-    if (this.state.query === '') {
-      this.setState({books:[]})
-    }
     let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
     finalFilter.sort(sortBy('title'));
     this.setState({books: finalFilter})

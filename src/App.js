@@ -8,7 +8,7 @@ import sortBy from 'sort-by'
 
 class BooksApp extends React.Component {
   state = {
-    books:[]
+    books:[],
   }
   componentDidMount = () => {
     this.reloadAllBooks()
@@ -16,8 +16,7 @@ class BooksApp extends React.Component {
   reloadAllBooks = () => {
     BooksAPI.getAll().then(allBooks => {
       this.setState({
-        books: allBooks,
-        newBook: false
+        books: allBooks
       })
     })
   }
