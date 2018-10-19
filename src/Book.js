@@ -3,7 +3,7 @@ import ShelfSwitcher from './ShelfSwitcher'
 
 class Book extends React.Component {
   render(){
-    const author = this.props.book.authors
+    const author = (this.props.book.authors && this.props.book.authors.join(' & '))
     const title = this.props.book.title
     const imageURL = (this.props.book.imageLinks && `url("${this.props.book.imageLinks.smallThumbnail}")`)
     return (
