@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
-class Search extends React.Component {
+class Search extends Component {
   state = {
     query: '',
     books: []
@@ -20,44 +20,35 @@ class Search extends React.Component {
     if (this.state.query === '') {
       this.setState({ books: [] })
       return;
-    } if (this.state.query) {
-      console.log("query in updateSearch() is:", this.state.query)
-    BooksAPI.search(this.state.query).then( res => {
-      let finalFilter = []
-      if (res.length) {
-        finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res)
-        finalFilter.sort(sortBy('title'));
-      }
-        this.setState({books: finalFilter})
+    } if (this.state.query !== 0) {
+      BooksAPI.search(this.state.query).then( res => {
+        console.log(this.state.query.value, this.state.query)
+        if (res.length > 0) {
+          let finalFilter = []
+          finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, res);
+          finalFilter = finalFilter.sort(sortBy('title'));
+          this.setState({books: finalFilter})
+        } else {
+          this.setState({books: []})
+        }
       })
     }
   }
   combineBookCaseAndQuery = (currentBooks, terms) => {
     const ht = {};
-    currentBooks.forEach(book => ht[book.id] = book.shelf);
-
-    terms.forEach(book => {
-      book.shelf = ht[book.id] || 'none';
-    })
+    currentBooks.forEach(book => ht[book.id] = book.shelf)
+    terms.forEach(book => book.shelf = ht[book.id] || 'none')
     return terms;
   }
-  componentWillReceiveProps = (props) => {
-    this.props = props;
-    let finalFilter = this.combineBookCaseAndQuery(this.props.allBooks, this.state.books)
-    finalFilter.sort(sortBy('title'));
-    this.setState({books: finalFilter})
-  }
+
   render(){
-
-
     return(
       <div className="search-books">
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
             <div className="search-books-input-wrapper">
               <input
-                id='myInput'
-                type="text"
+                type="search"
                 placeholder="Search by title or author"
                 onKeyUp={(event) => this.updateQuery(event.target.value)}
                 value={this.state.query.value}
